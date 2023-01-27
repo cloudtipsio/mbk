@@ -1,17 +1,22 @@
 schemaVersion: 2.1.0
 metadata:
   name: podman
-  version: "0.0.1"
 attributes:
-  controller.devfile.io/scc: container-build
   controller.devfile.io/storage-type: per-user
-projects:
-  - name: "podman"
-    git:
-      remotes:
-        origin: "https://github.com/cloudtipsio/podman"
+  controller.devfile.io/scc: container-build
 components:
-  - name: universal-developer-image
+  - attributes:
+      che-code.eclipse.org/contribute-cpuLimit: true
+      che-code.eclipse.org/contribute-cpuRequest: true
+      che-code.eclipse.org/contribute-endpoint/che-code: 3100
+      che-code.eclipse.org/contribute-endpoint/code-redirect-1: 13131
+      che-code.eclipse.org/contribute-endpoint/code-redirect-2: 13132
+      che-code.eclipse.org/contribute-endpoint/code-redirect-3: 13133
+      che-code.eclipse.org/contribute-entry-point: true
+      che-code.eclipse.org/contribute-memoryLimit: true
+      che-code.eclipse.org/contribute-memoryRequest: true
+      che-code.eclipse.org/contribute-volume-mount/checode: /checode
+      che-code.eclipse.org/contributed-container: universal-developer-image
     container:
       command:
         - /checode/entrypoint-volume.sh
@@ -61,3 +66,4 @@ components:
       volumeMounts:
         - name: checode
           path: /checode
+    name: universal-developer-image
