@@ -11,25 +11,53 @@ projects:
       remotes:
         origin: "https://github.com/cloudtipsio/podman"
 components:
-  - name: devtools
+  - name: universal-developer-image
     container:
-      image: "docker.io/cloudtips/podman:v2"
-      memoryLimit: 2Gi
+      command:
+        - /checode/entrypoint-volume.sh
+      cpuLimit: 500m
+      cpuRequest: 30m
+      endpoints:
+        - attributes:
+            contributed-by: che-code.eclipse.org
+            cookiesAuthEnabled: true
+            discoverable: false
+            type: main
+            urlRewriteSupported: true
+          exposure: public
+          name: che-code
+          path: '?tkn=eclipse-che'
+          protocol: https
+          secure: false
+          targetPort: 3100
+        - attributes:
+            contributed-by: che-code.eclipse.org
+            discoverable: false
+            urlRewriteSupported: true
+          exposure: public
+          name: code-redirect-1
+          protocol: http
+          targetPort: 13131
+        - attributes:
+            contributed-by: che-code.eclipse.org
+            discoverable: false
+            urlRewriteSupported: true
+          exposure: public
+          name: code-redirect-2
+          protocol: http
+          targetPort: 13132
+        - attributes:
+            contributed-by: che-code.eclipse.org
+            discoverable: false
+            urlRewriteSupported: true
+          exposure: public
+          name: code-redirect-3
+          protocol: http
+          targetPort: 13133
+      image: 'docker.io/cloudtips/podman:v3'
+      memoryLimit: 1024Mi
       memoryRequest: 256Mi
-commands:
-  - id: build-crds-and-schemas
-    exec:
-      component: devtools
-      commandLine: ./build.sh
-      label: Run build of CRDs and schemas
-  - id: fetch-dependencies-for-go-ls
-    exec:
-      component: devtools
-      commandLine: go mod vendor
-      label: Fetch dependencies for Go LS
-  - id: test
-    exec:
-      component: devtools
-      commandLine: go test -v ./...
-      label: Run tests
-
+      sourceMapping: /projects
+      volumeMounts:
+        - name: checode
+          path: /checode

@@ -44,4 +44,4 @@ RUN mkdir -p /var/lib/shared/overlay-images \
 
 ENV _CONTAINERS_USERNS_CONFIGURED=""
 
-USER podman
+# USER podman
