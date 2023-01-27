@@ -16,7 +16,7 @@ components:
         - /checode/entrypoint-volume.sh
       cpuLimit: 500m
       cpuRequest: 30m
-      image: 'docker.io/cloudtips/podman:v3'
+      image: 'docker.io/cloudtips/podman:v4'
       memoryLimit: 1024Mi
       memoryRequest: 256Mi
       sourceMapping: /projects
