@@ -11,8 +11,25 @@ projects:
       remotes:
         origin: "https://github.com/cloudtipsio/podman"
 components:
-  - name: podman
+  - name: devtools
     container:
-      image: "docker.io/cloudtips/podman:v1"
+      image: "docker.io/cloudtips/podman:v2"
       memoryLimit: 2Gi
       memoryRequest: 256Mi
+commands:
+  - id: build-crds-and-schemas
+    exec:
+      component: devtools
+      commandLine: ./build.sh
+      label: Run build of CRDs and schemas
+  - id: fetch-dependencies-for-go-ls
+    exec:
+      component: devtools
+      commandLine: go mod vendor
+      label: Fetch dependencies for Go LS
+  - id: test
+    exec:
+      component: devtools
+      commandLine: go test -v ./...
+      label: Run tests
+
