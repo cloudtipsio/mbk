@@ -1,26 +1,51 @@
-schemaVersion: 2.1.0
+apiVersion: 1.0.0
 metadata:
-  name: podman
-attributes:
-  controller.devfile.io/storage-type: per-user
-  controller.devfile.io/scc: container-build
-projects:
-  - name: "podman"
-    git:
-      remotes:
-        origin: "https://github.com/cloudtipsio/podman"
+  generateName: quarkus-devservices-
 components:
-  - name: universal-developer-image
-    container:
-      command:
-        - /checode/entrypoint-volume.sh
-      cpuLimit: 500m
-      cpuRequest: 30m
-      image: 'docker.io/cloudtips/podman:v4'
-      memoryLimit: 1024Mi
-      memoryRequest: 256Mi
-      sourceMapping: /projects
-      volumeMounts:
-        - name: checode
-          path: /checode
-
+  - id: redhat/quarkus-java11/latest
+    type: chePlugin
+  - mountSources: true
+    endpoints:
+      - name: app
+        port: 8080
+    memoryLimit: 1Gi
+    type: dockerimage
+    volumes:
+      - name: m2
+        containerPath: /home/jboss/.m2
+      - name: dind-socket
+        containerPath: /var/run
+    image: 'registry.redhat.io/codeready-workspaces/plugin-java11-rhel8:latest'
+    alias: app
+    env:
+      - value: '-XX:+UseParallelGC -XX:MinHeapFreeRatio=10 -XX:MaxHeapFreeRatio=20 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Djava.security.egd=file:/dev/./urandom -Duser.home=/home/jboss'
+        name: JAVA_OPTS
+      - value: $(JAVA_OPTS)
+        name: MAVEN_OPTS
+  - mountSources: true
+    alias: docker
+    memoryLimit: 1Gi
+    type: dockerimage
+    image: 'docker:dind-rootless'
+    volumes:
+      - name: dind-storage
+        containerPath: /var/lib/docker
+      - name: dind-socker
+        containerPath: /var/run
+commands:
+  - name: Attach remote debugger
+    actions:
+      - referenceContent: |
+          {
+            "version": "0.2.0",
+            "configurations": [
+              {
+                "type": "java",
+                "request": "attach",
+                "name": "Attach to Remote Quarkus App",
+                "hostName": "localhost",
+                "port": 5005
+              }
+            ]
+          }
+        type: vscode-launch
