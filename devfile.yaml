@@ -10,60 +10,12 @@ projects:
       remotes:
         origin: "https://github.com/cloudtipsio/podman"
 components:
-  - attributes:
-      che-code.eclipse.org/contribute-cpuLimit: true
-      che-code.eclipse.org/contribute-cpuRequest: true
-      che-code.eclipse.org/contribute-endpoint/che-code: 3100
-      che-code.eclipse.org/contribute-endpoint/code-redirect-1: 13131
-      che-code.eclipse.org/contribute-endpoint/code-redirect-2: 13132
-      che-code.eclipse.org/contribute-endpoint/code-redirect-3: 13133
-      che-code.eclipse.org/contribute-entry-point: true
-      che-code.eclipse.org/contribute-memoryLimit: true
-      che-code.eclipse.org/contribute-memoryRequest: true
-      che-code.eclipse.org/contribute-volume-mount/checode: /checode
-      che-code.eclipse.org/contributed-container: universal-developer-image
+  - name: universal-developer-image
     container:
       command:
         - /checode/entrypoint-volume.sh
       cpuLimit: 500m
       cpuRequest: 30m
-      endpoints:
-        - attributes:
-            contributed-by: che-code.eclipse.org
-            cookiesAuthEnabled: true
-            discoverable: false
-            type: main
-            urlRewriteSupported: true
-          exposure: public
-          name: che-code
-          path: '?tkn=eclipse-che'
-          protocol: https
-          secure: false
-          targetPort: 3100
-        - attributes:
-            contributed-by: che-code.eclipse.org
-            discoverable: false
-            urlRewriteSupported: true
-          exposure: public
-          name: code-redirect-1
-          protocol: http
-          targetPort: 13131
-        - attributes:
-            contributed-by: che-code.eclipse.org
-            discoverable: false
-            urlRewriteSupported: true
-          exposure: public
-          name: code-redirect-2
-          protocol: http
-          targetPort: 13132
-        - attributes:
-            contributed-by: che-code.eclipse.org
-            discoverable: false
-            urlRewriteSupported: true
-          exposure: public
-          name: code-redirect-3
-          protocol: http
-          targetPort: 13133
       image: 'docker.io/cloudtips/podman:v3'
       memoryLimit: 1024Mi
       memoryRequest: 256Mi
@@ -71,4 +23,4 @@ components:
       volumeMounts:
         - name: checode
           path: /checode
-    name: universal-developer-image
+
