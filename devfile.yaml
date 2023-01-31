@@ -3,16 +3,15 @@ metadata:
   name: mbk
 attributes:
   controller.devfile.io/storage-type: per-user
-  controller.devfile.io/scc: container-build
 projects:
   - git:
       remotes:
-        origin: 'https://github.com/cloudtipsio/podman.git'
-    name: mbk
+        origin: 'https://github.com/cloudtipsio/wks-mbk.git'
+    name: wks-mbk
 components:
   - name: tools
     container:
-      image: quay.io/devfile/universal-developer-image:ubi8-latest
+      image: docker.io/cloudtips/wks-mbk:v1
       memoryLimit: 3Gi
       endpoints:
         - exposure: none
