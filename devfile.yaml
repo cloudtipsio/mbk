@@ -1,6 +1,6 @@
 schemaVersion: 2.1.0
 metadata:
-  name: quarkus-devservices
+  name: mbk
 attributes:
   controller.devfile.io/storage-type: per-user
   controller.devfile.io/scc: container-build
@@ -8,32 +8,34 @@ projects:
   - git:
       remotes:
         origin: 'https://github.com/cloudtipsio/podman.git'
-    name: podman
+    name: mbk
 components:
-  - container:
-      command: ['sleep', 'infinity']
-      cpuLimit: 500m
-      cpuRequest: 30m
-      image: 'quay.io/devfile/universal-developer-image:ubi8-latest'
-      memoryLimit: 2Gi
-      memoryRequest: 256Mi
-      mountSources: true
-      sourceMapping: /projects
-    name: app
-
-  - container:
-      image: 'docker:dind-rootless'
-      memoryLimit: 1Gi
-      mountSources: true
-      sourceMapping: /projects
+  - name: tools
+    container:
+      image: quay.io/devfile/universal-developer-image:ubi8-latest
+      memoryLimit: 3Gi
+      endpoints:
+        - exposure: none
+          name: debug
+          protocol: tcp
+          targetPort: 5005
+        - exposure: public
+          name: 8080-tcp
+          protocol: http
+          targetPort: 8080
       volumeMounts:
-        - name: dind-storage
-          path: /var/lib/docker
-        - name: dind-socker
-          path: /var/run
-    name: docker
+        - name: m2
+          path: /home/user/.m2
+  - name: m2
+    volume:
+      size: 1G
 
-  - name: dind-storage
-    volume: {}
-  - name: dind-socker
-    volume: {}
+  - name: redis
+    container:
+      image: redis:5-alpine
+      memoryLimit: 250Mi
+      endpoints:
+        - exposure: none
+          name: redis
+          protocol: tcp
+          targetPort: 6379

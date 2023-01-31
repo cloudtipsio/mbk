@@ -1,47 +1,47 @@
-FROM quay.io/devfile/universal-developer-image:ubi8-latest
+FROM alpine:3.15
 
-USER root
+# apache maven
+ARG MAVEN_VERSION=3.3.3
+ENV M2_HOME=/usr/lib/apache-maven-${MAVEN_VERSION}
+ENV MAVEN_OPTS="-Xmx2048m -XX:ReservedCodeCacheSize=128m -Dsun.lang.ClassLoader.allowArraySyntax=true"
 
-RUN dnf -y update && \
-    rpm --setcaps shadow-utils 2>/dev/null && \
-    dnf -y install podman fuse-overlayfs openssh-clients \
-        --exclude container-selinux && \
-    dnf clean all && \
-    rm -rf /var/cache /var/log/dnf* /var/log/yum.*
+# openjdk
+ENV JAVA_HOME_8=/usr/lib/jvm/java-8-openjdk
+ENV JAVA_HOME_11=/usr/lib/jvm/java-11-openjdk
+ENV JAVA_HOME=${JAVA_HOME_8}
 
-RUN useradd podman; \
-echo -e "podman:10000:5000" > /etc/subuid; \
-echo -e "podman:10000:5000" > /etc/subgid;
+# path
+ENV PATH=$PATH:${JAVA_HOME}/bin:${M2_HOME}/bin:${SONAR_CLI_HOME}/bin
 
-ARG _REPO_URL="https://raw.githubusercontent.com/containers/podman/main/contrib/podmanimage/stable"
-ADD $_REPO_URL/containers.conf /etc/containers/containers.conf
-ADD $_REPO_URL/podman-containers.conf /home/podman/.config/containers/containers.conf
+# install required packages
+RUN apk add --no-cache \
+      bash busybox-extras \
+      ca-certificates curl \
+      openjdk8 openjdk11 \
+      unzip ; \
+    \
+# install apache maven
+    wget -c https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz -O - | tar -xz -C /usr/lib/ ; \
+    \
+# remove unnecessary packages and files
+    rm -rf \
+      ${JAVA_HOME_8}/demo \
+      ${JAVA_HOME_8}/jmods \
+      ${JAVA_HOME_8}/man \
+      ${JAVA_HOME_11}/demo \
+      ${JAVA_HOME_11}/jmods \
+      ${JAVA_HOME_11}/man ;
 
-RUN mkdir -p /home/podman/.local/share/containers && \
-    chown podman:podman -R /home/podman && \
-    chmod 644 /etc/containers/containers.conf
+# install certificate and create service account
+COPY certs /usr/local/share/ca-certificates
+RUN update-ca-certificates ; \
+    adduser -S -s /bin/bash -G root -u 10001 user ;
 
-# Copy & modify the defaults to provide reference if runtime changes needed.
-# Changes here are required for running with fuse-overlay storage inside container.
-RUN sed -e 's|^#mount_program|mount_program|g' \
-           -e '/additionalimage.*/a "/var/lib/shared",' \
-           -e 's|^mountopt[[:space:]]*=.*$|mountopt = "nodev,fsync=0"|g' \
-           -i /etc/containers/storage.conf
+# config
+# COPY config/settings.xml ${M2_HOME}/conf/settings.xml
 
-# Note VOLUME options must always happen after the chown call above
-# RUN commands can not modify existing volumes
-VOLUME /var/lib/containers
-VOLUME /home/podman/.local/share/containers
-
-RUN mkdir -p /var/lib/shared/overlay-images \
-             /var/lib/shared/overlay-layers \
-             /var/lib/shared/vfs-images \
-             /var/lib/shared/vfs-layers && \
-    touch /var/lib/shared/overlay-images/images.lock && \
-    touch /var/lib/shared/overlay-layers/layers.lock && \
-    touch /var/lib/shared/vfs-images/images.lock && \
-    touch /var/lib/shared/vfs-layers/layers.lock
-
-ENV _CONTAINERS_USERNS_CONFIGURED=""
-
-USER root
+# run container
+USER 10001
+ENV HOME=/home/user
+WORKDIR /projects
+CMD ["tail", "-f", "/dev/null"]

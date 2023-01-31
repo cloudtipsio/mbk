@@ -1,0 +1,39 @@
+schemaVersion: 2.1.0
+metadata:
+  name: quarkus-devservices
+attributes:
+  controller.devfile.io/storage-type: per-user
+  controller.devfile.io/scc: container-build
+projects:
+  - git:
+      remotes:
+        origin: 'https://github.com/cloudtipsio/podman.git'
+    name: podman
+components:
+  - container:
+      command: ['sleep', 'infinity']
+      cpuLimit: 500m
+      cpuRequest: 30m
+      image: 'quay.io/devfile/universal-developer-image:ubi8-latest'
+      memoryLimit: 2Gi
+      memoryRequest: 256Mi
+      mountSources: true
+      sourceMapping: /projects
+    name: app
+
+  - container:
+      image: 'docker:dind-rootless'
+      memoryLimit: 1Gi
+      mountSources: true
+      sourceMapping: /projects
+      volumeMounts:
+        - name: dind-storage
+          path: /var/lib/docker
+        - name: dind-socker
+          path: /var/run
+    name: docker
+
+  - name: dind-storage
+    volume: {}
+  - name: dind-socker
+    volume: {}
