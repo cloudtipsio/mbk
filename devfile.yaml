@@ -11,7 +11,7 @@ attributes:
 components:
   - name: devtools
     container:
-      image: docker.io/cloudtips/wks-mbk:v5
+      image: docker.io/cloudtips/wks-mbk:v6
       memoryLimit: 3Gi
       endpoints:
         - exposure: none
