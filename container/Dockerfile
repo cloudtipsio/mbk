@@ -2,6 +2,16 @@
 # FROM redhat/ubi8
 FROM quay.io/devfile/base-developer-image
 
+# exec with root user
+USER 0
+
+# install internal certificates
+COPY certs /etc/ssl/certs/
+RUN update-ca-trust ;
+
+# exec with normal user
+USER 10001
+
 # install packages
 RUN curl -fsSL "https://get.sdkman.io" | bash ; \
     source "/home/user/.sdkman/bin/sdkman-init.sh" ; \
@@ -23,20 +33,4 @@ ENV MAVEN_HOME="/home/user/.sdkman/candidates/maven/current" \
     PATH="/home/user/.sdkman/candidates/maven/current/bin:$PATH"
 COPY config/settings.xml /home/user/.sdkman/candidates/maven/current/conf/settings.xml
 
-# exec with root user
-USER 0
-
-# install internal certificates
-COPY certs /etc/ssl/certs/
-RUN update-ca-trust ; \
-    \
-# Set permissions on /etc/passwd and /home to allow arbitrary users to write
-    mkdir -p /home/user ; \
-    chgrp -R 0 /home ; \
-    chmod -R g=u /etc/passwd /etc/group /home ;
-
-# cleanup dnf cache
-RUN dnf -y clean all --enablerepo='*'
-
-# exec with normal user
-USER 10001
+WORKDIR /project
