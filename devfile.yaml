@@ -9,9 +9,9 @@ projects:
         origin: 'https://github.com/cloudtipsio/wks-mbk.git'
     name: wks-mbk
 components:
-  - name: tools
+  - name: devtools
     container:
-      image: docker.io/cloudtips/wks-mbk:v3
+      image: docker.io/cloudtips/wks-mbk:v4
       memoryLimit: 3Gi
       endpoints:
         - exposure: none
