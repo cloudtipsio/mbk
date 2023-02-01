@@ -11,7 +11,7 @@ projects:
 components:
   - name: tools
     container:
-      image: docker.io/cloudtips/wks-mbk:v1
+      image: docker.io/cloudtips/wks-mbk:v3
       memoryLimit: 3Gi
       endpoints:
         - exposure: none
