@@ -1,12 +1,11 @@
-# FROM quay.io/devfile/universal-developer-image:ubi8-latest
-# FROM redhat/ubi8
+# base image - https://github.com/devfile/developer-images
 FROM quay.io/devfile/base-developer-image
 
 # exec with root user
 USER 0
 
 # install internal certificates
-COPY certs /etc/ssl/certs/
+COPY certs/*.crt /etc/ssl/certs/
 RUN update-ca-trust ;
 
 # exec with normal user
@@ -31,6 +30,7 @@ ENV JAVA_HOME="/home/user/.sdkman/candidates/java/current" \
 # maven
 ENV MAVEN_HOME="/home/user/.sdkman/candidates/maven/current" \
     PATH="/home/user/.sdkman/candidates/maven/current/bin:$PATH"
-COPY config/settings.xml /home/user/.sdkman/candidates/maven/current/conf/settings.xml
+COPY files/settings.xml /home/user/.sdkman/candidates/maven/current/conf/settings.xml
 
+# default directory
 WORKDIR /project
