@@ -1,11 +1,6 @@
 schemaVersion: 2.1.0
 metadata:
   name: mbk
-projects:
-  - git:
-      remotes:
-        origin: 'https://github.com/cloudtipsio/mbk.git'
-    name: mbk
 components:
   - name: devtools
     container:
