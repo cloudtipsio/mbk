@@ -2,7 +2,7 @@ schemaVersion: 2.1.0
 metadata:
   name: mbk
 components:
-  - name: devtools
+  - name: tools
     container:
       image: docker.io/cloudtips/mbk:latest
       memoryLimit: 3Gi
@@ -32,3 +32,12 @@ components:
           protocol: tcp
           targetPort: 6379
 
+commands:
+  - id: devfile
+    exec:
+      component: tools
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: 'rm -f devfile.yaml'
+      group:
+        kind: run
+        isDefault: true
