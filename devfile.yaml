@@ -31,3 +31,4 @@ components:
           name: redis
           protocol: tcp
           targetPort: 6379
+
