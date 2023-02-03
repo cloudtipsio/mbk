@@ -1,15 +1,17 @@
 schemaVersion: 2.1.0
 metadata:
   name: mbk
+attributes:
+  controller.devfile.io/storage-type: per-user
 projects:
   - git:
       remotes:
-        origin: 'https://github.com/cloudtipsio/mbk.git'
-    name: mbk
+        origin: 'https://github.com/cloudtipsio/wks-mbk.git'
+    name: wks-mbk
 components:
-  - name: devtools
+  - name: tools
     container:
-      image: docker.io/cloudtips/mbk:latest
+      image: docker.io/cloudtips/wks-mbk:v1
       memoryLimit: 3Gi
       endpoints:
         - exposure: none
