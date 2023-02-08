@@ -1,34 +1,47 @@
 schemaVersion: 2.1.0
 metadata:
-  name: mbk
+  name: java-maven
+  version: 1.2.0
+  displayName: Maven Java
+  description: Upstream Maven and OpenJDK 11
+  tags:
+    - Java
+    - Maven
+  projectType: Maven
+  language: Java
+  icon: /images/java.svg
+starterProjects:
+  - name: mbk
+    git:
+      remotes:
+        origin: 'https://github.com/cloudtipsio/mbk.git'
 components:
-  - name: devtools
+  - name: tools
     container:
-      image: docker.io/cloudtips/mbk:latest
-      memoryLimit: 3Gi
+      image: registry.access.redhat.com/ubi8/openjdk-11:latest
+      command: ["tail", "-f", "/dev/null"]
+      memoryLimit: 512Mi
+      mountSources: true
       endpoints:
+        - name: http-maven
+          targetPort: 8080
         - exposure: none
           name: debug
-          protocol: tcp
-          targetPort: 5005
-        - exposure: public
-          name: 8080-tcp
-          protocol: http
-          targetPort: 8080
+          targetPort: 5858
       volumeMounts:
         - name: m2
           path: /home/user/.m2
+      env:
+        - name: DEBUG_PORT
+          value: '5858'
   - name: m2
-    volume:
-      size: 1G
-
-  - name: redis
-    container:
-      image: redis:5-alpine
-      memoryLimit: 250Mi
-      endpoints:
-        - exposure: none
-          name: redis
-          protocol: tcp
-          targetPort: 6379
-
+    volume: {}
+commands:
+  - id: mvn-settings
+    exec:
+      component: tools
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: 'cp assets/settings.xml /home/user/.m2'
+      group:
+        kind: build
+        isDefault: true
