@@ -36,12 +36,12 @@ components:
           value: '5858'
   - name: m2
     volume: {}
-commands:
-  - id: mvn-settings
-    exec:
-      component: tools
-      workingDir: ${PROJECT_SOURCE}
-      commandLine: 'cp assets/settings.xml /home/user/.m2'
-      group:
-        kind: build
-        isDefault: true
+# commands:
+#   - id: mvn-settings
+#     exec:
+#       component: tools
+#       workingDir: ${PROJECT_SOURCE}
+#       commandLine: 'cp assets/settings.xml /home/user/.m2'
+#       group:
+#         kind: build
+#         isDefault: true
