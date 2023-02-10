@@ -1,19 +1,6 @@
 schemaVersion: 2.1.0
 metadata:
   name: mbk
-  displayName: MBK
-  description: OpenJDK 8 e Maven 3.3.3
-  tags:
-    - Java
-    - Maven
-  projectType: Maven
-  language: Java
-  icon: /images/java.svg
-projects:
-  - name: mbk
-    git:
-      remotes:
-        origin: 'https://github.com/cloudtipsio/mbk.git'
 components:
   - name: tools
     container:
@@ -32,7 +19,7 @@ components:
       env:
         - name: DEBUG_PORT
           value: '5858'
- 
+
   - name: m2
     volume: {}
 
