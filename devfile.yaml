@@ -1,33 +1,23 @@
 schemaVersion: 2.1.0
 metadata:
-  name: java-maven
-  version: 1.2.0
-  displayName: Maven Java
-  description: Upstream Maven and OpenJDK 11
+  name: mbk
+  displayName: MBK
+  description: OpenJDK 8 e Maven 3.3.3
   tags:
     - Java
     - Maven
   projectType: Maven
   language: Java
   icon: /images/java.svg
-# starterProjects:
-#   - name: mbk
-#     git:
-#       remotes:
-#         origin: 'https://github.com/cloudtipsio/mbk.git'
-
 projects:
   - name: mbk
-    clonePath: mbk
-    zip:
-      location: https://github.com/cloudtipsio/mbk/releases/download/0.0.1/mbk.zip
-
+    git:
+      remotes:
+        origin: 'https://github.com/cloudtipsio/mbk.git'
 components:
   - name: tools
     container:
-      # image: registry.access.redhat.com/ubi8/openjdk-11:latest
       image: docker.io/cloudtips/mbk
-      # command: ["tail", "-f", "/dev/null"]
       memoryLimit: 512Mi
       mountSources: true
       endpoints:
@@ -42,5 +32,16 @@ components:
       env:
         - name: DEBUG_PORT
           value: '5858'
+
   - name: m2
     volume: {}
+
+  - name: redis
+    container:
+      image: redis:5-alpine
+      memoryLimit: 250Mi
+      endpoints:
+        - exposure: none
+          name: redis
+          protocol: tcp
+          targetPort: 6379
