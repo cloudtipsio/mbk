@@ -1,6 +1,11 @@
 schemaVersion: 2.1.0
 metadata:
   name: mbk
+projects:
+  - name: mbk
+    git:
+      remotes:
+        origin: "https://gitlab.com/cloudtipsio-spread/mbk.git"
 components:
   - name: tools
     container:
