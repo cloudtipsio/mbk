@@ -5,7 +5,7 @@ projects:
   - name: mbk
     git:
       remotes:
-        origin: "https://gitlab.com/cloudtipsio-spread/mbk.git"
+        origin: "https://github.com/cloudtipsio/mbk.git"
 components:
   - name: tools
     container:
