@@ -4,7 +4,7 @@ metadata:
 components:
   - name: tools
     container:
-      image: docker.io/cloudtips/mbk
+      image: cloudtips/mbk
       memoryLimit: 512Mi
       mountSources: true
       endpoints:

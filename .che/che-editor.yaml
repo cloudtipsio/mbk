@@ -1,5 +1,0 @@
-id: che-incubator/che-code/insiders
-override:
-  containers:
-    - name: che-code-runtime-description
-      image: docker.io/cloudtips/che-code:v1
